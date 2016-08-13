@@ -1,4 +1,5 @@
 <?php
+
 /*
  * 
  *  ISPConfig v3.x module for WHMCS v5.x or Higher
@@ -19,31 +20,45 @@
  *
  */
 
-ini_set('error_reporting', E_ALL & ~E_NOTICE);
-ini_set("display_errors", 0); // Set this option to Zero on a production machine.
+/* No direct access to this file */
+if (!defined("WHMCS")) {
+	die("This file cannot be accessed directly");
+	}
+
 openlog( "ispconfig3", LOG_PID | LOG_PERROR, LOG_LOCAL0 );
 
-function ispcfg3_ConfigOptions() {
+/* Sets default server ports & other info for provisioning module */
+function ispconfig3_MetaData() {
+  return array(
+		'DisplayName' => 'ISPConfig 3', // Display name for module
+		'APIVersion' => '1.1', // API version 1.1 preferred over version 1.0
+		'RequiresServer' => true, // Requires a server to be configured in WHMCS
+		'DefaultNonSSLPort' => '8080', // Control Panel non-SSL port
+		'DefaultSSLPort' => '8080', // Control Panel SSL port
+		);
+}
+
+function ispconfig3_ConfigOptions() {
     $configarray = array(
-        'ISPConfig Remote Username' => array(
+        'ConfigOption1' => array(
                     'Type' => 'text',
                     'Size' => '16',
-                    'Description' => 'Remote Username configured in ISPConfig.'
+                    'Description' => 'Leave Blank'
             ),
-        'ISPConfig Remote Password' => array(
-                    'Type' => 'password',
-                    'Size' => '16',
-                    'Description' => 'Remote Password configured in ISPConfig.'
-            ),
-        'ISPConfig URL' => array(
+        'ConfigOption2' => array(
                     'Type' => 'text',
-                    'Size' => '32',
-                    'Description' => 'E.g. ispconfig.example.tld:8080'
+                    'Size' => '16',
+                    'Description' => 'Leave Blank'
             ),
-        'ISPConfig SSL' => array(
-                    'Type' => 'yesno',
-                    'Description' => 'Tick if you enabled SSL on your ISPConfig'
-                                    . ' Controlpanel Web Interface.'
+        'ConfigOption3' => array(
+                    'Type' => 'text',
+                    'Size' => '16',
+                    'Description' => 'Leave Blank'
+            ),
+        'ConfigOption4' => array(
+                    'Type' => 'text',
+                    'Size' => '16',
+                    'Description' => 'Leave Blank'
             ),
         'ISPConfig Template ID' => array(
                     'Type' => 'text',
@@ -144,7 +159,7 @@ function ispcfg3_ConfigOptions() {
     return $configarray;
 }
 
-function ispcfg3_CreateAccount( $params ) {
+function ispconfig3_CreateAccount( $params ) {
 
     $productid          = $params['pid'];
     $accountid          = $params['accountid'];
@@ -152,10 +167,10 @@ function ispcfg3_CreateAccount( $params ) {
     $username           = $params['username'];
     $password           = $params['password'];
     $clientsdetails     = $params['clientsdetails'];
-    $soapuser           = $params['configoption1'];
-    $soappassword       = $params['configoption2'];
-    $soapsvrurl         = $params['configoption3'];
-    $soapsvrssl         = $params['configoption4'];
+    $soapuser           = $params['serverusername'];
+    $soappassword       = $params['serverpassword'];
+    $soapsvrurl         = $params['serverhostname'];
+    $soapsvrssl         = $params['serversecure'];
     $templateid         = $params['configoption5'];
     $designtheme        = $params['configoption6'];
     $globalphp          = $params['configoption7'];
@@ -703,16 +718,16 @@ function ispcfg3_CreateAccount( $params ) {
     return $result;
 }
 
-function ispcfg3_TerminateAccount( $params ) {
+function ispconfig3_TerminateAccount( $params ) {
 
     $username           = $params['username'];
     $password           = $params['password'];
     $clientsdetails     = $params['clientsdetails'];
     $domain             = $params['domain'];
-    $soapuser           = $params['configoption1'];
-    $soappassword       = $params['configoption2'];
-    $soapsvrurl         = $params['configoption3'];
-    $soapsvrssl         = $params['configoption4'];
+    $soapuser           = $params['serverusername'];
+    $soappassword       = $params['serverpassword'];
+    $soapsvrurl         = $params['serverhostname'];
+    $soapsvrssl         = $params['serversecure'];
     $domaintool         = $params['configoption10'];
     
     if ( $soapsvrssl == 'on' ) {
@@ -810,15 +825,15 @@ function ispcfg3_TerminateAccount( $params ) {
     return $result;
 }
 
-function ispcfg3_ChangePackage( $params ) {
+function ispconfig3_ChangePackage( $params ) {
 
     $username           = $params['username'];
     $password           = $params['password'];
     $clientsdetails     = $params['clientsdetails'];
-    $soapuser           = $params['configoption1'];
-    $soappassword       = $params['configoption2'];
-    $soapsvrurl         = $params['configoption3'];
-    $soapsvrssl         = $params['configoption4'];
+    $soapuser           = $params['serverusername'];
+    $soappassword       = $params['serverpassword'];
+    $soapsvrurl         = $params['serverhostname'];
+    $soapsvrssl         = $params['serversecure'];
     $templateid         = $params['configoption5'];
 
     if ( $soapsvrssl == 'on' ) {
@@ -897,16 +912,16 @@ function ispcfg3_ChangePackage( $params ) {
     return $result;
 }
 
-function ispcfg3_SuspendAccount( $params ) {
+function ispconfig3_SuspendAccount( $params ) {
 
     $username           = $params['username'];
     $password           = $params['password'];
     $domain             = strtolower( $params['domain'] );
     $clientsdetails     = $params['clientsdetails'];
-    $soapuser           = $params['configoption1'];
-    $soappassword       = $params['configoption2'];
-    $soapsvrurl         = $params['configoption3'];
-    $soapsvrssl         = $params['configoption4'];
+    $soapuser           = $params['serverusername'];
+    $soappassword       = $params['serverpassword'];
+    $soapsvrurl         = $params['serverhostname'];
+    $soapsvrssl         = $params['serversecure'];
     $webcreation        = $params['configoption9'];
     $dns                = $params['configoption18'];
     $addmaildomain      = $params['configoption21'];
@@ -1051,16 +1066,16 @@ function ispcfg3_SuspendAccount( $params ) {
     return $result;
 }
 
-function ispcfg3_UnsuspendAccount( $params ) {
+function ispconfig3_UnsuspendAccount( $params ) {
 
     $username           = $params['username'];
     $password           = $params['password'];
     $domain             = strtolower( $params['domain'] );
     $clientsdetails     = $params['clientsdetails'];
-    $soapuser           = $params['configoption1'];
-    $soappassword       = $params['configoption2'];
-    $soapsvrurl         = $params['configoption3'];
-    $soapsvrssl         = $params['configoption4'];
+    $soapuser           = $params['serverusername'];
+    $soappassword       = $params['serverpassword'];
+    $soapsvrurl         = $params['serverhostname'];
+    $soapsvrssl         = $params['serversecure'];
     $webcreation        = $params['configoption9'];
     $dns                = $params['configoption18'];
     $addmaildomain      = $params['configoption21'];
@@ -1204,15 +1219,15 @@ function ispcfg3_UnsuspendAccount( $params ) {
     return $result;
 }
 
-function ispcfg3_ChangePassword( $params ) {
+function ispconfig3_ChangePassword( $params ) {
 
     $username           = $params['username'];
     $password           = $params['password'];
     $clientsdetails     = $params['clientsdetails'];
-    $soapuser           = $params['configoption1'];
-    $soappassword       = $params['configoption2'];
-    $soapsvrurl         = $params['configoption3'];
-    $soapsvrssl         = $params['configoption4'];
+    $soapuser           = $params['serverusername'];
+    $soappassword       = $params['serverpassword'];
+    $soapsvrurl         = $params['serverhostname'];
+    $soapsvrssl         = $params['serversecure'];
 
     if ( $soapsvrssl == 'on' ) {
         
@@ -1298,9 +1313,9 @@ function ispcfg3_ChangePassword( $params ) {
     return $result;
 }
 
-function ispcfg3_LoginLink( $params ) {
-    $soapsvrurl         = $params['configoption3'];
-    $soapsvrssl         = $params['configoption4'];
+function ispconfig3_LoginLink( $params ) {
+    $soapsvrurl         = $params['serverhostname'];
+    $soapsvrssl         = $params['serversecure'];
 
     if ( $soapsvrssl == 'on' ) {
         
@@ -1330,9 +1345,9 @@ function ispcfg3_LoginLink( $params ) {
     </script>';
 }
 
-function ispcfg3_ClientArea( $params ) {
-    $soapsvrurl         = $params['configoption3'];
-    $soapsvrssl         = $params['configoption4'];
+function ispconfig3_ClientArea( $params ) {
+    $soapsvrurl         = $params['serverhostname'];
+    $soapsvrssl         = $params['serversecure'];
 
     if ( $soapsvrssl == 'on' ) {
         
