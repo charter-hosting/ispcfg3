@@ -65,11 +65,10 @@ function ispconfig3_ConfigOptions() {
                     'Size' => '3',
                     'Description' => 'The ID of the Client Template in ISPConfig'
             ),
-        'ISPConfig Usertheme' => array( 
+        'ConfigOption6' => array( 
                     'Type' => 'text',
-                    'Size' => '20',
-                    'Description' => 'The ISPConfig theme to use, typically '
-                                    . 'this will be \'default\''
+                    'Size' => '6',
+                    'Description' => 'Leave Blank. Set to default automatically.'
             ),
         'Global Client PHP Options' => array(
                     'Type' => 'text',
@@ -172,7 +171,6 @@ function ispconfig3_CreateAccount( $params ) {
     $soapsvrurl         = $params['serverhostname'];
     $soapsvrssl         = $params['serversecure'];
     $templateid         = $params['configoption5'];
-    $designtheme        = $params['configoption6'];
     $globalphp          = $params['configoption7'];
     $chrootenable       = $params['configoption8'];
     $webcreation        = $params['configoption9'];
@@ -436,7 +434,7 @@ function ispconfig3_CreateAccount( $params ) {
                     'username' => $username,
                     'password' => $password,
                     'language' => $defaultlanguage,
-                    'usertheme' => $designtheme,
+                    'usertheme' => 'default',
                     'street' => $address,
                     'zip' => $zip,
                     'city' => $city,
