@@ -68,16 +68,17 @@ function ispconfig3_ConfigOptions() {
         'ConfigOption6' => array( 
                     'Type' => 'text',
                     'Size' => '6',
-                    'Description' => 'Leave Blank. Set to default automatically.'
+                    'Description' => 'Leave Blank.'
             ),
         'Global Client PHP Options' => array(
                     'Type' => 'text',
                     'Size' => '32',
                     'Description' => 'E.g. no,fast-cgi,cgi,mod,suphp,php-fpm'
             ),
-        'Global Client Chroot Options' => array(
-                    'Type' => 'dropdown',
-                    'Options' => 'no,jailkit'
+        'ConfigOption8' => array(
+                    'Type' => 'text',
+                    'Size' => '6',
+                    'Description' => 'Leave Blank'
             ),
         'Website Creation' => array(
                     'Type' => 'yesno',
@@ -108,10 +109,10 @@ function ispconfig3_ConfigOptions() {
                     'Description' => 'Syntax: CGI,SSI,Ruby,SuEXEC,ErrorDocuments'
                                     . ',SSL E.g.: y,y,y,n,y,n'
             ),
-        'Auto Subdomain' => array(
-                    'Type' => 'dropdown',
-                    'Options' => 'none,www,*',
-                    'Description' => 'Select to create subdomain during setup'
+        'ConfigOption15' => array(
+                    'Type' => 'text',
+                    'Size' => '3',
+                    'Description' => 'Leave Blank'
             ),
         'PHP Mode' => array(
                     'Type' => 'dropdown',
@@ -172,14 +173,12 @@ function ispconfig3_CreateAccount( $params ) {
     $soapsvrssl         = $params['serversecure'];
     $templateid         = $params['configoption5'];
     $globalphp          = $params['configoption7'];
-    $chrootenable       = $params['configoption8'];
     $webcreation        = $params['configoption9'];
     $domaintool         = $params['configoption10'];
     $webwriteprotect    = $params['configoption11'];
     $webquota           = $params['configoption12'];
     $webtraffic         = $params['configoption13'];
     $websettings        = explode( ',',$params['configoption14'] );
-    $subdomain          = $params['configoption15'];
     $phpmode            = $params['configoption16'];
     $webactive          = $params['configoption17'];
     $dns                = $params['configoption18'];
@@ -446,7 +445,7 @@ function ispconfig3_CreateAccount( $params ) {
                     'email' => $mail,
                     'template_master' => $templateid,
                     'web_php_options' => $globalphp,
-                    'ssh_chroot' => $chrootenable,
+                    'ssh_chroot' => 'jailkit',
                     'default_mailserver' => $defaultmailserver,
                     'default_webserver' => $defaultwebserver,
                     'default_dbserver' => $defaultdbserver,
@@ -498,7 +497,7 @@ function ispconfig3_CreateAccount( $params ) {
                     'suexec' => $enablesuexec,
                     'errordocs' => $enableerrdocs,
                     'is_subdomainwww' => 1,
-                    'subdomain' => $subdomain,
+                    'subdomain' => 'www',
                     'php' => $phpmode,
                     'ruby' => $enableruby,
                     'redirect_type' => '',
